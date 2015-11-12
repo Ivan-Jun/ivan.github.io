@@ -1,0 +1,49 @@
+RecycleView的Item相关操作
+<h2>说明：</h2>
+    RecycleView 是android-support-v7-21版本中新增的一个列表控件，相对于ListView和GridView，RecycleView的使用更加方便和灵活，
+替代ListView和GridView已成为必然。
+使用：
+    RecycleView的基础用法在此不多过多的赘述（如果没有用过的话可以百度、Google）。
+    大部分的时候我们项目中的列表仅仅做展示和点击使用，但是偶尔我们也会涉及到长按切换位置、右滑删除和滑出菜单的操作，ListView已经有许多的开源控件来实现长按切换和右滑删除的操作了：
+    长按切换操作和右滑删除操作：https://github.com/bauerca/drag-sort-listview
+    滑出菜单的操作：https://github.com/daimajia/AndroidSwipeLayout
+    但是这些问题在RecycleView都不在是问题，Google官方针对Item的操作提供了ItemTouchHelper类，我们可以直接通过ItemTouchHelper来进行Item的一些相关操作：
+    代码如下：
+    ItemTouchHelper.Callback mCallback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.RIGHT) {
+            /**
+             * @param recyclerView
+             * @param viewHolder 拖动的ViewHolder
+             * @param target 目标位置的ViewHolder
+             * @return
+             */
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                int fromPosition = viewHolder.getAdapterPosition();//得到拖动ViewHolder的position
+                int toPosition = target.getAdapterPosition();//得到目标ViewHolder的position
+                if (fromPosition < toPosition) {
+                    //分别把中间所有的item的位置重新交换
+                    for (int i = fromPosition; i < toPosition; i++) {
+                        Collections.swap(datas, i, i + 1);
+                    }
+                } else {
+                    for (int i = fromPosition; i > toPosition; i--) {
+                        Collections.swap(datas, i, i - 1);
+                    }
+                }
+                mAdapter.notifyItemMoved(fromPosition, toPosition);
+                //返回true表示执行拖动
+                return true;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+//                int position = viewHolder.getAdapterPosition();
+//                datas.remove(position);
+//                mAdapter.notifyItemRemoved(position);
+            }
+        };
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(mCallback);
+        itemTouchHelper.attachToRecyclerView(rv_area);
+  重写OnMove方法中可以定义切换的操作
+  重写OnSwiped中定义右滑Item项的操作。
+    
