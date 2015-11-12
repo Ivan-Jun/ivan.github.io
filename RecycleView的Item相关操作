@@ -1,5 +1,5 @@
 RecycleView的Item相关操作
-<h2>说明：</h2>
+说明：
     RecycleView 是android-support-v7-21版本中新增的一个列表控件，相对于ListView和GridView，RecycleView的使用更加方便和灵活，
 替代ListView和GridView已成为必然。
 使用：
