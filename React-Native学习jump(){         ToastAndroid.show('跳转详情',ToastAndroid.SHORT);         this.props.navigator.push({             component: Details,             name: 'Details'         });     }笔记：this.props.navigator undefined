@@ -1,0 +1,29 @@
+##跳转代码
+jump(){
+        ToastAndroid.show('跳转详情',ToastAndroid.SHORT);
+        this.props.navigator.push({
+            component: Details,
+            name: 'Details'
+        });
+    }
+##调用代码
+<TouchableOpacity
+                    navigator={this.props.navigator}
+                    underlayColor="rgb(210, 230, 255)"
+                    activeOpacity={0.5}
+                    onPress={this.jump}
+                    style={{ borderRadius: 8,padding: 6,marginTop:5}}>
+                    <Text style={{fontSize:16}}>跳转详情</Text>
+                </TouchableOpacity>
+点击出错
+点击界面跳转到下一级界面无反应，放开注释一处的代码：
+
+alert(this.props.navigator);
+1
+则给出undefined的错误信息，而打印this.props同样给出undefined错误信息，经查询，错误处在点击方法绑定上：
+
+onPress = {this.jumpTo}
+1
+修改为:
+
+onPress = {this.jumpTo.bind(this)}
